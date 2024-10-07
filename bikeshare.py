@@ -6,6 +6,24 @@ CITY_DATA = { 'chicago': 'chicago.csv',
               'new york city': 'new_york_city.csv',
               'washington': 'washington.csv' }
 
+def get_valid_input(prompt, valid_options):
+    """
+    Prompts the user for input and validates it against a list of valid options.
+
+    Args:
+        (str) prompt: The input prompt for the user.
+        (list) valid_options: List of valid input options.
+
+    Returns:
+        (str): Validated user input.
+    """
+    while True:
+        user_input = input(prompt)
+        if user_input in valid_options:
+            return user_input
+        else:
+            print(f"Invalid input. Please choose from {', '.join(valid_options).capitalize()}.")
+
 def get_filters():
     """
     Asks user to specify a city, month, and day to analyze.
@@ -23,28 +41,13 @@ def get_filters():
     valid_days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun', 'all']
 
     # get user input for city (Chicago, New York City, Washington). HINT: Use a while loop to handle invalid inputs
-    while True:
-        city = input("Please enter city (Chicago, New York City, Washington): ").lower()
-        if city in valid_cities:
-            break
-        else:
-            print("Invalid input. Please choose from Chicago, New York City, or Washington.")
-            
+    city = get_valid_input("Please enter city (Chicago, New York City, Washington): ", valid_cities)
+
     # get user input for month (all, january, february, ... , june)
-    while True:
-        month = input("Please enter month (Jan, Feb, ..., Jun or all): ").lower()
-        if month in valid_months:
-            break
-        else:
-            print("Invalid input. Please enter one of the following: Jan, Feb, Mar, Apr, May, Jun, or 'all'.")
+    month = get_valid_input("Please enter month (Jan, Feb, ..., Jun or all): ", valid_months)
 
     # get user input for day of week (all, monday, tuesday, ... sunday)
-    while True:
-        day = input("Please enter day of the week (Mon, Tue, ..., Sun or all): ").lower()
-        if day in valid_days:
-            break
-        else:
-            print("Invalid input. Please enter one of the following: Mon, Tue, Wed, Thu, Fri, Sat, Sun, or 'all'.")
+    day = get_valid_input("Please enter day of the week (Mon, Tue, ..., Sun or all): ", valid_days)
 
     print('-' * 40)
     return city, month, day
@@ -127,6 +130,12 @@ def stations_and_trip_stats(df):
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
 
+def display_travel_time(label, travel_time):
+    """Displays the formatted travel time."""
+    
+    hours, remainder = divmod(travel_time, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    print(f'{label}: {int(hours):02}:{int(minutes):02}:{int(seconds):02}')
 
 def trip_duration_stats(df):
     """Displays statistics on the total and average trip duration."""
@@ -134,17 +143,13 @@ def trip_duration_stats(df):
     print('\nCalculating Trip Duration...\n')
     start_time = time.time()
 
-    # display total travel time
+    # calculate total and mean travel times
     total_travel_time = df['Trip Duration'].sum()
-    hours, remainder = divmod(total_travel_time, 3600)
-    minutes, seconds = divmod(remainder, 60)
-    print(f'Total Travel Time: {int(hours):02}:{int(minutes):02}:{int(seconds):02}')
+    mean_travel_time = df['Trip Duration'].mean()
 
-    # display mean travel time
-    mean_travel_time = np.mean(df['Trip Duration'])
-    mean_hours, mean_remainder = divmod(mean_travel_time, 3600)
-    mean_minutes, mean_seconds = divmod(mean_remainder, 60)
-    print(f'Mean Travel Time: {int(mean_hours):02}:{int(mean_minutes):02}:{int(mean_seconds):02}')
+    # display formatted travel times
+    display_travel_time('Total Travel Time', total_travel_time)
+    display_travel_time('Mean Travel Time', mean_travel_time)
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
