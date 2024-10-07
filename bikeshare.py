@@ -130,6 +130,12 @@ def stations_and_trip_stats(df):
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
 
+def display_travel_time(label, travel_time):
+    """Displays the formatted travel time."""
+    
+    hours, remainder = divmod(travel_time, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    print(f'{label}: {int(hours):02}:{int(minutes):02}:{int(seconds):02}')
 
 def trip_duration_stats(df):
     """Displays statistics on the total and average trip duration."""
@@ -137,17 +143,13 @@ def trip_duration_stats(df):
     print('\nCalculating Trip Duration...\n')
     start_time = time.time()
 
-    # display total travel time
+    # calculate total and mean travel times
     total_travel_time = df['Trip Duration'].sum()
-    hours, remainder = divmod(total_travel_time, 3600)
-    minutes, seconds = divmod(remainder, 60)
-    print(f'Total Travel Time: {int(hours):02}:{int(minutes):02}:{int(seconds):02}')
+    mean_travel_time = df['Trip Duration'].mean()
 
-    # display mean travel time
-    mean_travel_time = np.mean(df['Trip Duration'])
-    mean_hours, mean_remainder = divmod(mean_travel_time, 3600)
-    mean_minutes, mean_seconds = divmod(mean_remainder, 60)
-    print(f'Mean Travel Time: {int(mean_hours):02}:{int(mean_minutes):02}:{int(mean_seconds):02}')
+    # display formatted travel times
+    display_travel_time('Total Travel Time', total_travel_time)
+    display_travel_time('Mean Travel Time', mean_travel_time)
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
