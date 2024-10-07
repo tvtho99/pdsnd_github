@@ -183,7 +183,7 @@ def display_data(df):
     row_start = 0
 
     while True:
-        # get user input for seeing raw data or not
+        # prompt user if they want to see raw data
         raw_data = input('\nWould you like to see raw data? Enter yes or no.\n').lower()
         if raw_data not in ['yes', 'no']:
             print("Please enter a valid response (yes or no).")
@@ -192,7 +192,7 @@ def display_data(df):
         if raw_data == 'no':
             break
         
-        # get user input for number of rows wanna see
+        # prompt user for how many rows to display
         while True:
             try:
                 row_count = int(input('\nHow many rows do you wanna see?\n'))
@@ -205,7 +205,7 @@ def display_data(df):
 
         row_end = row_start + row_count
 
-        # check if the requested rows exceed the DataFrame length
+        # check if the requested rows exceed available data
         if row_end > len(df):
             row_end = len(df)
             print(f"The last available row is {row_end}. Displaying rows {row_start} to {row_end}:\n")
